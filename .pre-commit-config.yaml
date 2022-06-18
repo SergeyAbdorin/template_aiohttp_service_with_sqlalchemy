@@ -1,0 +1,33 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.4.0
+    hooks:
+      - id: check-toml
+      - id: check-yaml
+        exclude: ^(helm/.*/templates/|werf.yaml)
+  - repo: local
+    hooks:
+      - id: test
+        name: pytest
+        entry: bash -c 'PYTHONPATH="$PWD/src" pytest'
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [push]
+      - id: isort
+        name: imports-sort
+        description: Plugin for sorting imports in python modules intended for IDE integration
+        entry: isort
+        additional_dependencies: ['isort==4.3.20']
+        args: [-e, -m=3, -w=99]
+        language: python
+        stages: [manual]
+      - id: lint
+        name: wemake-python-styleguide
+        description: Linter with tons of flake8 plugins
+        entry: flake8
+        additional_dependencies: ['wemake-python-styleguide==0.12.5']
+        require_serial: true
+        language: python
+        types: [python]
+        stages: [push]

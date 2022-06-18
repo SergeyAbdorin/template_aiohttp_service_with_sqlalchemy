@@ -1,0 +1,26 @@
+service:
+  name: 'aiohttp-template-service'
+  version: '1.0.0'
+  component: 'backend'
+  port: 8080
+  debug: true
+client:
+  timeout: 2
+logging:
+  version: 1
+  formatters:
+    console-formatter:
+      format: '%(asctime)s %(levelname)-8s %(name)-15s %(pathname)-130s %(funcName)-30s %(message)s'
+  handlers:
+    console:
+      class: 'logging.StreamHandler'
+      level: 'DEBUG'
+      stream: 'ext://sys.stdout'
+      formatter: 'console-formatter'
+  root:
+    level: 'DEBUG'
+    handlers:
+      - 'console'
+  disable_existing_loggers: False
+
+env_prefix: 'AIOHTTP_TEMPLATE_SERVICE_'

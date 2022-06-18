@@ -1,0 +1,19 @@
+info:
+  description: aiohttp-template-service API
+  title: aiohttp-template-service API
+  version: 1.0.0
+openapi: 3.0.2
+paths:
+  /healthz/ready:
+    get:
+      description: Сообщает о готовности сервиса к обработке запросов.
+      responses:
+        '200':
+          description: OK
+        '503':
+          description: UNREADY to accept requests
+      tags:
+      - Health checks
+servers:
+- description: The local API server
+  url: http://localhost:8080/
