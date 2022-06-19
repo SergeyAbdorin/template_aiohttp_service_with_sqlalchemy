@@ -1,7 +1,7 @@
 import pytest
 
-from app.service import prepare_app
-from app.system import environment
+from src.app.__main__ import prepare_app
+from src.app.system import environment
 
 
 @pytest.fixture

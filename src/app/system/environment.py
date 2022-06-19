@@ -28,7 +28,23 @@ def get_config(options):
     try:
         config = yaml.safe_load(Path(options.config).read_text())
     except FileNotFoundError:
-        path_to_dir = os.path.dirname(__file__)
+        path_to_dir = Path(__file__).parent.parent.parent.parent
         options.config = os.path.join(path_to_dir, options.config)
         config = yaml.safe_load(Path(options.config).read_text())
     return config
+
+
+def get_db_url(is_async: bool = False):
+    """Возвращает url для подключения к базе данных."""
+    if is_async:
+        prefix = 'postgresql+asyncpg'
+    else:
+        prefix = 'postgresql'
+
+    return (
+        f'{prefix}://{os.environ.get("DB_USR")}'
+        f':{os.environ.get("DB_PWD")}'
+        f'@{os.environ.get("DB_HST")}'
+        f':{os.environ.get("DB_PRT")}'
+        f'/{os.environ.get("DB_NM")}'
+    )

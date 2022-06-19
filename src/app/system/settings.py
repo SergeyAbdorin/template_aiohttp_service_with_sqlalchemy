@@ -5,8 +5,11 @@ import asyncpg
 from aiohttp import web
 from aiohttp.client import ClientSession, ClientTimeout
 from dotenv import load_dotenv
+from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.sql import select
 
-from app.system.constants import App
+from src.app.system import environment
+from src.app.system.constants import App
 
 load_dotenv()
 
@@ -22,24 +25,28 @@ async def _setup_client_session(app: web.Application):
 
 
 async def _setup_db_connection(app: web.Application):
-    """Настройка подключения к базе данных."""
+    """Настройка подключения к базе данных.
+
+    Безопасно завершает подключение после остановки приложения.
+
+    Yields:
+        connect to db.
+    """
     logging.info('Connecting to database')
-    conn = await asyncpg.connect(
-        user=os.environ.get('DB_USR'),
-        password=os.environ.get('DB_PWD'),
-        database=os.environ.get('DB_NM'),
-        host=os.environ.get('DB_HST'),
-        port=os.environ.get('DB_PRT'),
+    app[App.db_conn.name] = create_async_engine(
+        environment.get_db_url(is_async=True)
     )
-    app[App.db_conn.name] = conn
-    await conn.fetch('SELECT 1')
+    async with app[App.db_conn.name].begin() as conn:
+        await conn.execute(select(1))
+
     logging.info('Connected to database')
 
-    yield
-
-    logging.info('Disconnecting from database')
-    await conn.close()
-    logging.info('Disconnected from database')
+    try:
+        yield
+    finally:
+        logging.info('Disconnecting from database')
+        await app[App.db_conn.name].dispose()
+        logging.info('Disconnected from database')
 
 
 def setup_connections(app: web.Application):

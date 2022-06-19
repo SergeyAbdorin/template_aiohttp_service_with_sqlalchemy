@@ -1,7 +1,7 @@
 import aiohttp_cors
 from aiohttp import web
 
-from app.api.healthz import ready
+from src.app.api.healthz import ready
 
 
 def setup_routes(app: web.Application):

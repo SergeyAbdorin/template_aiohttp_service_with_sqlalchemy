@@ -7,11 +7,11 @@ import sys
 from aiohttp import web
 from aiohttp_swagger import setup_swagger
 
-from app.api.routes import setup_routes
-from app.system.constants import App
-from app.system import environment
-from app.system.middlewares import setup_middlewares
-from app.system.settings import setup_connections
+from src.app.api.routes import setup_routes
+from src.app.system.constants import App
+from src.app.system import environment
+from src.app.system.middlewares import setup_middlewares
+from src.app.system.settings import setup_connections
 
 
 def prepare_app(config):

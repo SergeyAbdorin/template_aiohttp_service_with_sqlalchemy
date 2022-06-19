@@ -9,7 +9,7 @@ from aiohttp.web_request import Request
 from aiohttp.web_response import StreamResponse
 from opentracing import global_tracer, propagation, tags
 
-from app.system import errors
+from src.app.system import errors
 
 RequestHandler = Callable[[Request], Awaitable[StreamResponse]]
 MiddlewareFunction = Callable[[Request, RequestHandler], Awaitable[StreamResponse]]

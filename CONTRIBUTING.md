@@ -15,6 +15,12 @@
     ```shell script
     pip install -r requirements.txt
     ```
+   При разработке на Apple M1, возможно будет необходимо дополнительно выполнить
+    ```shell script
+    pip install greenlet
+    ```
+
+
 3. Настроить commit хуки.
     ```shell script
     pre-commit install --install-hooks
@@ -55,3 +61,15 @@ git add . && pre-commit run lint --all-files
 - откорректировать версию и запустить скрипт [tools/apispec/generate.py](tools/apispec/generate.py).
     Результатом будет файл swagger.yaml в соответствующей папке в [public/docs](./public/docs).
 - добавить ссылку в [index.html](./public/index.html) на `api_view.html` новой версии
+
+##Миграции
+Для работы с бд и миграциями используется SQLAlchemy + alembic
+Схемы базы данных необходимо описывать в src/db/schema.py
+Для создания миграции используется команда:
+```shell
+python -m src.db revision --autogenerate
+```
+Накатить миграции можно командой:
+```shell
+python -m src.db upgrate head
+```
